@@ -1,0 +1,12 @@
+services:
+  notes-api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DB_USER: notes_admin
+      DB_PASS: password
+      DB_NAME: notes_api
+      DB_URL: jdbc:postgresql://postgres-db:5432/${DB_NAME}

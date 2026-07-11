@@ -1,11 +1,7 @@
-package kz.notes.notesapi.notes
+package kz.notes.notesapi.notes.domain;
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
+import kz.notes.notesapi.users.domain.UserEntity
 import java.time.Instant
 
 @Entity
@@ -18,7 +14,7 @@ class NoteEntity(
     @Column(name = "title")
     var title: String,
 
-    @Column(name="content")
+    @Column(name = "content")
     var content: String,
 
     @Column(name = "created_at")
@@ -30,4 +26,7 @@ class NoteEntity(
     @Column(name = "is_archived")
     var isArchived: Boolean = false,
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    var user: UserEntity
 )

@@ -1,6 +1,6 @@
 package kz.notes.notesapi.notes.dto
 
-import kz.notes.notesapi.notes.NoteEntity
+import kz.notes.notesapi.notes.domain.NoteEntity
 import java.time.Instant
 
 data class NoteResponseDto(
@@ -9,7 +9,7 @@ data class NoteResponseDto(
     val content: String,
     val createdAt: Instant,
     val updatedAt: Instant,
-    )
+)
 
 fun NoteEntity.toResponseDto() = NoteResponseDto(
     id = id!!,
@@ -17,4 +17,4 @@ fun NoteEntity.toResponseDto() = NoteResponseDto(
     content = content,
     createdAt = createdAt,
     updatedAt = updatedAt,
-    )
+)

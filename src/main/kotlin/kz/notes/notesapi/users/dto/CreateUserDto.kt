@@ -1,12 +1,12 @@
-package kz.notes.notesapi.notes.dto
+package kz.notes.notesapi.users.dto
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 
-data class CreateNoteDto(
+data class CreateUserDto(
     @field:NotBlank("Field cannot be empty")
     @field:Size(max = 30)
-    var title: String,
+    var firstName: String,
     @field:NotBlank("Field cannot be empty")
-    var content: String,
+    var lastName: String
 )

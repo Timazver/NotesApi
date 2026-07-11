@@ -10,3 +10,13 @@ services:
       DB_PASS: password
       DB_NAME: notes_api
       DB_URL: jdbc:postgresql://postgres-db:5432/${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+    networks:
+      - spring-db-network
+
+
+networks:
+  spring-db-network:
+    external: true
+    name: db-shared-network

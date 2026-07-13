@@ -20,7 +20,7 @@ class UserService(val repo: UserRepository) {
         repo.save(entity)
     }
 
-    fun updateNote(id: Long, firstName: String, lastName: String) {
+    fun updateUser(id: Long, firstName: String, lastName: String) {
         val user = findNoteOrThrow(id)
         user.firstName = firstName
         user.lastName = lastName

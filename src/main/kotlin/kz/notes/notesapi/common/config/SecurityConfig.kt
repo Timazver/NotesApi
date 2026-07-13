@@ -30,8 +30,14 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                     .requestMatchers("/auth/**", "/error").permitAll()
+                    .requestMatchers(
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html"
+                    ).permitAll()
                     .anyRequest().authenticated()
             }
+
             .exceptionHandling { it.authenticationEntryPoint(jwtAuthenticationEntryPoint) }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()

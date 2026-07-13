@@ -31,7 +31,7 @@ class UserController(val service: UserService) {
 
     @PutMapping("/{id}")
     fun updateUser(@PathVariable id: Long, @RequestBody payload: UpdateUserDto): BaseResponse<Nothing> {
-        service.updateNote(id, payload.firstName, payload.lastName)
+        service.updateUser(id, payload.firstName, payload.lastName)
         return BaseResponse.success(data = null)
     }
 

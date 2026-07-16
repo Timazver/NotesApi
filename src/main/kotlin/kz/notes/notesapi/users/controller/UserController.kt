@@ -1,43 +1,32 @@
 package kz.notes.notesapi.users.controller
 
-import jakarta.validation.Valid
 import kz.notes.notesapi.common.BaseResponse
-import kz.notes.notesapi.users.dto.CreateUserDto
 import kz.notes.notesapi.users.dto.UpdateUserDto
 import kz.notes.notesapi.users.dto.UserResponseDto
 import kz.notes.notesapi.users.dto.toResponseDto
 import kz.notes.notesapi.users.service.UserService
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/users")
 class UserController(val service: UserService) {
-    @GetMapping
-    fun getAllUsers(): BaseResponse<List<UserResponseDto>> {
-        return BaseResponse.success(service.getAllUsers().map { it -> it.toResponseDto() })
-    }
 
-    @GetMapping("/{id}")
-    fun getUserInfo(@PathVariable id: Long): BaseResponse<UserResponseDto> {
-        val user = service.getUserInfo(id)
+    @GetMapping("/me")
+    fun getUserInfo(@AuthenticationPrincipal email: String): BaseResponse<UserResponseDto> {
+        val user = service.getUserInfo(email)
         return BaseResponse.success(user.toResponseDto())
     }
 
-    @PostMapping
-    fun addUser(@Valid @RequestBody payload: CreateUserDto): BaseResponse<Nothing> {
-        service.addUser(payload.firstName, payload.lastName)
-        return BaseResponse.success(data = null, status = 201)
-    }
-
-    @PutMapping("/{id}")
-    fun updateUser(@PathVariable id: Long, @RequestBody payload: UpdateUserDto): BaseResponse<Nothing> {
-        service.updateUser(id, payload.firstName, payload.lastName)
+    @PutMapping("/me")
+    fun updateUser(@RequestBody payload: UpdateUserDto, @AuthenticationPrincipal email: String): BaseResponse<Nothing> {
+        service.updateUser(email, payload.firstName, payload.lastName)
         return BaseResponse.success(data = null)
     }
 
-    @DeleteMapping("/{id}")
-    fun deleteUser(@PathVariable id: Long): BaseResponse<Nothing> {
-        service.deleteUser(id)
+    @DeleteMapping("/me")
+    fun deleteUser(@AuthenticationPrincipal email: String): BaseResponse<Nothing> {
+        service.deleteUser(email)
         return BaseResponse.success(data = null)
     }
 }

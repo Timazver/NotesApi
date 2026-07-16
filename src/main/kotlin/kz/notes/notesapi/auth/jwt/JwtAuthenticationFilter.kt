@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import kz.notes.notesapi.auth.domain.exceptions.UnauthorizedException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
@@ -52,7 +53,9 @@ class JwtAuthenticationFilter(
         }
 
         val email = jwtTokenService.extractEmail(token)
-        val authentication = UsernamePasswordAuthenticationToken(email, null, emptyList())
+        val role = jwtTokenService.extractRole(token)
+        val authorities = listOf(SimpleGrantedAuthority(role.authority))
+        val authentication = UsernamePasswordAuthenticationToken(email, null, authorities)
         authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
         SecurityContextHolder.getContext().authentication = authentication
         return true

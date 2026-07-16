@@ -3,6 +3,7 @@ package kz.notes.notesapi.auth.jwt
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import kz.notes.notesapi.users.domain.Role
 import org.springframework.stereotype.Component
 import java.time.Instant
 import java.util.*
@@ -13,10 +14,11 @@ class JwtTokenService(
 ) {
     private val signKey = Keys.hmacShaKeyFor(properties.secret.toByteArray())
 
-    fun generateToken(email: String): String {
+    fun generateToken(email: String, role: Role): String {
         val now = Instant.now()
         return Jwts.builder()
             .subject(email)
+            .claim(ROLE_CLAIM, role.name)
             .issuedAt(Date.from(now))
             .expiration(Date.from(now.plusSeconds(properties.expiration)))
             .signWith(signKey)
@@ -32,21 +34,39 @@ class JwtTokenService(
             .subject
     }
 
+    fun extractRole(token: String): Role {
+        val role = Jwts.parser()
+            .verifyWith(signKey)
+            .build()
+            .parseSignedClaims(token)
+            .payload
+            .get(ROLE_CLAIM, String::class.java)
+
+        return Role.valueOf(role)
+    }
+
     fun validateToken(token: String?): Boolean {
         if (token.isNullOrBlank()) {
             return false
         }
 
         try {
-            Jwts.parser()
+            val claims = Jwts.parser()
                 .verifyWith(signKey)
                 .build()
                 .parseSignedClaims(token)
-            return true
+                .payload
+            val role = claims.get(ROLE_CLAIM, String::class.java)
+
+            return !claims.subject.isNullOrBlank() && Role.entries.any { it.name == role }
         } catch (e: JwtException) {
             return false // Токен недействителен
         } catch (e: IllegalArgumentException) {
             return false
         }
+    }
+
+    private companion object {
+        const val ROLE_CLAIM = "role"
     }
 }

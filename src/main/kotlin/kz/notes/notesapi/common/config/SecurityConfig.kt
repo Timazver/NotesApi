@@ -30,7 +30,9 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                     .requestMatchers("/auth/**", "/error").permitAll()
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
                     .requestMatchers(
+                        "/docs/**",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html"

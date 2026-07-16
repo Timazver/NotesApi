@@ -3,20 +3,15 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "8080:8080"
     environment:
-      DB_USER: notes_admin
-      DB_PASS: password
-      DB_NAME: notes_api
-      DB_URL: jdbc:postgresql://postgres-db:5432/${DB_NAME}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
-    networks:
-      - spring-db-network
-
-
-networks:
-  spring-db-network:
-    external: true
-    name: db-shared-network

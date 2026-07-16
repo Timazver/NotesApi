@@ -1,20 +1,18 @@
 package kz.notes.notesapi.notes.service
 
-import kz.notes.notesapi.infrastructure.AuthRepository
-import kz.notes.notesapi.infrastructure.NoteRepository
-import kz.notes.notesapi.infrastructure.UserRepository
 import kz.notes.notesapi.notes.domain.NoteEntity
 import kz.notes.notesapi.notes.exceptions.NoteNotFoundException
+import kz.notes.notesapi.notes.repository.NoteRepository
 import kz.notes.notesapi.users.domain.UserEntity
 import kz.notes.notesapi.users.domain.exceptions.UserNotFoundException
+import kz.notes.notesapi.users.repository.UserRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
 
 @Service
 class NoteService(
     private val repo: NoteRepository,
-    private val userRepo: UserRepository,
-    private val authRepository: AuthRepository
+    private val userRepo: UserRepository
 ) {
 
     fun getNotes(email: String): List<NoteEntity> {
@@ -58,9 +56,7 @@ class NoteService(
         val existed = repo.getNoteEntityByIdAndUserId(id, user.id!!) ?: throw NoteNotFoundException()
         repo.delete(existed)
     }
-    
-    private fun findUserOrThrow(email: String): UserEntity {
-        val authCredentials = authRepository.findByEmail(email) ?: throw UserNotFoundException()
-        return authCredentials.user
-    }
+
+    private fun findUserOrThrow(email: String): UserEntity =
+        userRepo.findByEmail(email) ?: throw UserNotFoundException()
 }

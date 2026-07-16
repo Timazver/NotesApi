@@ -8,3 +8,4 @@
 - **Service Layer**: All business logic must reside here.
 - **Controller Layer**: Strictly for HTTP request handling, validation, and routing. No business logic.
 - **Repository Layer**: Should be as "dumb" as possible, responsible solely for database interactions.
+- **Admin Feature**: All admin logic is contained in admin feature. Only user with 'ADMIN' role has access to It.

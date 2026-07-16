@@ -1,6 +1,8 @@
 package kz.notes.notesapi.common
 
 import kz.notes.notesapi.auth.domain.exceptions.EmailAlreadyExistsException
+import kz.notes.notesapi.auth.domain.exceptions.WrongCredentialsException
+import kz.notes.notesapi.users.domain.exceptions.UserNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -50,4 +52,21 @@ class CustomExceptionHandler {
             HttpStatus.CONFLICT
         )
     }
+
+    @ExceptionHandler(WrongCredentialsException::class)
+    fun handleWrongCredentialsException(ex: WrongCredentialsException): ResponseEntity<BaseResponse<Nothing>> {
+        return ResponseEntity(
+            BaseResponse.error(status = HttpStatus.UNAUTHORIZED.value(), ex.message!!),
+            HttpStatus.UNAUTHORIZED
+        )
+    }
+
+    @ExceptionHandler(UserNotFoundException::class)
+    fun handleUserNotFoundException(ex: UserNotFoundException): ResponseEntity<BaseResponse<Nothing>> {
+        return ResponseEntity(
+            BaseResponse.error(status = HttpStatus.NOT_FOUND.value(), ex.message!!),
+            HttpStatus.NOT_FOUND
+        )
+    }
+
 }

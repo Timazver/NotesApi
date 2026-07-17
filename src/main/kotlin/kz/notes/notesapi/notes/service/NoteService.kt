@@ -67,9 +67,13 @@ class NoteService(
         email: String,
     ) {
         val user = findUserOrThrow(email)
-        val existed = repo.getNoteEntityByIdAndUserId(id, user.id!!) ?: throw NoteNotFoundException()
+        val existed =
+            repo.getNoteEntityByIdAndUserId(id, user.id!!)
+                ?: throw NoteNotFoundException()
         repo.delete(existed)
     }
 
-    private fun findUserOrThrow(email: String): UserEntity = userRepo.findByEmail(email) ?: throw UserNotFoundException()
+    private fun findUserOrThrow(email: String): UserEntity =
+        userRepo.findByEmail(email)
+            ?: throw UserNotFoundException()
 }

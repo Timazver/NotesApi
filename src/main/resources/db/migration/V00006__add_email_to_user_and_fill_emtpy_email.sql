@@ -1,6 +1,3 @@
-ALTER TABLE users
-    ADD COLUMN email VARCHAR(255) unique;
-
 UPDATE users u
 SET email = ac.email
 FROM auth_credentials ac
@@ -13,3 +10,6 @@ WHERE email IS NULL;
 ALTER TABLE users
     ALTER COLUMN email
         SET not null;
+
+ALTER TABLE users
+    ADD CONSTRAINT users_email_key UNIQUE (email);

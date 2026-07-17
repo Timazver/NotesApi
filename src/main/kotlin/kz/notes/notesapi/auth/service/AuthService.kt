@@ -23,7 +23,7 @@ class AuthService(
 ) {
     @Transactional
     fun registerUser(command: RegisterUserCommand) {
-f        val existed = userRepo.existsByEmail(command.email)
+        val existed = userRepo.existsByEmail(command.email)
         if (existed) throw EmailAlreadyExistsException("Email already exists")
         val user =
             UserEntity(

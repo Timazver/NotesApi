@@ -6,7 +6,7 @@ import io.jsonwebtoken.security.Keys
 import kz.notes.notesapi.users.domain.Role
 import org.springframework.stereotype.Component
 import java.time.Instant
-import java.util.*
+import java.util.Date
 
 @Component
 class JwtTokenService(

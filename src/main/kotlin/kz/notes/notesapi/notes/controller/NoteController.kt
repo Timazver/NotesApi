@@ -8,7 +8,12 @@ import kz.notes.notesapi.notes.dto.UpdateNoteDto
 import kz.notes.notesapi.notes.dto.toResponseDto
 import kz.notes.notesapi.notes.service.NoteService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/notes")
@@ -18,7 +23,12 @@ class NoteController(
     @GetMapping
     fun getAllNotes(
         @AuthenticationPrincipal email: String,
-    ): BaseResponse<List<NoteResponseDto>> = BaseResponse.Companion.success(service.getNotes(email).map { it.toResponseDto() })
+    ): BaseResponse<List<NoteResponseDto>> =
+        BaseResponse.Companion.success(
+            service
+                .getNotes(email)
+                .map { it.toResponseDto() },
+        )
 
     @GetMapping("/{id}")
     fun getNote(

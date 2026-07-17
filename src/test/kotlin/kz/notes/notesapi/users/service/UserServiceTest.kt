@@ -12,14 +12,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.Instant
 
 @ExtendWith(MockitoExtension::class)
 class UserServiceTest {
-
     @Mock
     private lateinit var userRepository: UserRepository
 
@@ -35,13 +34,14 @@ class UserServiceTest {
     @BeforeEach
     fun setUp() {
         testUser = UserEntity(id = 1L, firstName = "John", lastName = "Doe", isActive = true)
-        testAuthCredentials = AuthCredentialsEntity(
-            id = 1L,
-            email = "john.doe@example.com",
-            user = testUser,
-            passHash = "hashed_password",
-            createdAt = Instant.now()
-        )
+        testAuthCredentials =
+            AuthCredentialsEntity(
+                id = 1L,
+                email = "john.doe@example.com",
+                user = testUser,
+                passHash = "hashed_password",
+                createdAt = Instant.now(),
+            )
     }
 
     @Test

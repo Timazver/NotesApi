@@ -851,6 +851,6 @@ style:
     aliases: [ 'CanBeVal' ]
     ignoreLateinitVar: false
   WildcardImport:
-    active: false
+    active: true
     excludeImports:
       - 'java.util.*'

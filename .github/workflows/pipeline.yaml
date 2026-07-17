@@ -24,10 +24,6 @@ jobs:
       - name: Run test
         run: ./gradlew test
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name:
 
 
 

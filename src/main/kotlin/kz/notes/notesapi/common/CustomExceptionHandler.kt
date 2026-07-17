@@ -12,61 +12,53 @@ import org.springframework.web.context.request.WebRequest
 
 @RestControllerAdvice
 class CustomExceptionHandler {
-
     @ExceptionHandler(NotFoundException::class)
     fun handleNoteNotFound(
         e: NotFoundException,
-        request: WebRequest
+        request: WebRequest,
     ): ResponseEntity<BaseResponse<Nothing>> {
-
+        println(request.userPrincipal)
         return ResponseEntity(
             BaseResponse.error(status = HttpStatus.NOT_FOUND.value(), e.message!!),
-            HttpStatus.NOT_FOUND
+            HttpStatus.NOT_FOUND,
         )
     }
 
-
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleValidation(
-        ex: MethodArgumentNotValidException
-    ): ResponseEntity<BaseResponse<Nothing>> {
-        val message = ex.bindingResult
-            .fieldErrors
-            .sortedBy { it.field }
-            .joinToString(", ") { "${it.field}: ${it.defaultMessage}" }
+    fun handleValidation(ex: MethodArgumentNotValidException): ResponseEntity<BaseResponse<Nothing>> {
+        val message =
+            ex.bindingResult
+                .fieldErrors
+                .sortedBy { it.field }
+                .joinToString(", ") { "${it.field}: ${it.defaultMessage}" }
 
         return ResponseEntity(
             BaseResponse.error(
                 status = HttpStatus.BAD_REQUEST.value(),
-                message = message
+                message = message,
             ),
-            HttpStatus.BAD_REQUEST
+            HttpStatus.BAD_REQUEST,
         )
     }
-
 
     @ExceptionHandler(EmailAlreadyExistsException::class)
-    fun handleEmailExistsException(ex: EmailAlreadyExistsException): ResponseEntity<BaseResponse<Nothing>> {
-        return ResponseEntity(
+    fun handleEmailExistsException(ex: EmailAlreadyExistsException): ResponseEntity<BaseResponse<Nothing>> =
+        ResponseEntity(
             BaseResponse.error(status = HttpStatus.CONFLICT.value(), ex.message!!),
-            HttpStatus.CONFLICT
+            HttpStatus.CONFLICT,
         )
-    }
 
     @ExceptionHandler(WrongCredentialsException::class)
-    fun handleWrongCredentialsException(ex: WrongCredentialsException): ResponseEntity<BaseResponse<Nothing>> {
-        return ResponseEntity(
+    fun handleWrongCredentialsException(ex: WrongCredentialsException): ResponseEntity<BaseResponse<Nothing>> =
+        ResponseEntity(
             BaseResponse.error(status = HttpStatus.UNAUTHORIZED.value(), ex.message!!),
-            HttpStatus.UNAUTHORIZED
+            HttpStatus.UNAUTHORIZED,
         )
-    }
 
     @ExceptionHandler(UserNotFoundException::class)
-    fun handleUserNotFoundException(ex: UserNotFoundException): ResponseEntity<BaseResponse<Nothing>> {
-        return ResponseEntity(
+    fun handleUserNotFoundException(ex: UserNotFoundException): ResponseEntity<BaseResponse<Nothing>> =
+        ResponseEntity(
             BaseResponse.error(status = HttpStatus.NOT_FOUND.value(), ex.message!!),
-            HttpStatus.NOT_FOUND
+            HttpStatus.NOT_FOUND,
         )
-    }
-
 }

@@ -23,27 +23,32 @@ class AuthService(
 ) {
     @Transactional
     fun registerUser(command: RegisterUserCommand) {
-        val existed = userRepo.existsByEmail(command.email);
+f        val existed = userRepo.existsByEmail(command.email)
         if (existed) throw EmailAlreadyExistsException("Email already exists")
-        val user = UserEntity(
-            firstName = command.firstName,
-            lastName = command.lastName,
-            isActive = true,
-            email = command.email,
-            role = Role.USER,
-        )
+        val user =
+            UserEntity(
+                firstName = command.firstName,
+                lastName = command.lastName,
+                isActive = true,
+                email = command.email,
+                role = Role.USER,
+            )
         val saved = userRepo.save(user)
         val passwordHash = passwordEncoder.encode(command.password)
-        val authCredentials = AuthCredentialsEntity(
-            id = null,
-            user = saved,
-            passHash = passwordHash!!,
-            createdAt = Instant.now(),
-        )
+        val authCredentials =
+            AuthCredentialsEntity(
+                id = null,
+                user = saved,
+                passHash = passwordHash!!,
+                createdAt = Instant.now(),
+            )
         repo.save(authCredentials)
     }
 
-    fun login(email: String, password: String): String {
+    fun login(
+        email: String,
+        password: String,
+    ): String {
         val existedUser = userRepo.findByEmail(email) ?: throw UserNotFoundException("Email does not exist")
         val credentials = repo.findByUser(existedUser) ?: throw WrongCredentialsException("User not found")
         if (passwordEncoder.matches(password, credentials.passHash)) {
@@ -51,8 +56,5 @@ class AuthService(
         } else {
             throw WrongCredentialsException("Wrong password")
         }
-
     }
-
-
 }

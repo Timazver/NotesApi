@@ -1,6 +1,5 @@
 package kz.notes.notesapi.auth.jwt
 
-
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import kz.notes.notesapi.auth.domain.exceptions.UnauthorizedException
@@ -15,19 +14,19 @@ import java.nio.charset.StandardCharsets
 
 @Component
 class JwtAuthenticationEntryPoint(
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
 ) : AuthenticationEntryPoint {
-
     override fun commence(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        authException: AuthenticationException
+        authException: AuthenticationException,
     ) {
-        val message = if (authException is UnauthorizedException) {
-            authException.message ?: DEFAULT_MESSAGE
-        } else {
-            DEFAULT_MESSAGE
-        }
+        val message =
+            if (authException is UnauthorizedException) {
+                authException.message ?: DEFAULT_MESSAGE
+            } else {
+                DEFAULT_MESSAGE
+            }
 
         response.status = HttpStatus.UNAUTHORIZED.value()
         response.characterEncoding = StandardCharsets.UTF_8.name()
@@ -36,8 +35,8 @@ class JwtAuthenticationEntryPoint(
             response.writer,
             BaseResponse.error(
                 status = HttpStatus.UNAUTHORIZED.value(),
-                message = message
-            )
+                message = message,
+            ),
         )
     }
 

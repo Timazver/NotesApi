@@ -8,5 +8,5 @@ data class CreateUserDto(
     @field:Size(max = 30)
     var firstName: String,
     @field:NotBlank("Field cannot be empty")
-    var lastName: String
+    var lastName: String,
 )

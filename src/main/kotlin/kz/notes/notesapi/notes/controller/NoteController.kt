@@ -12,14 +12,19 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/notes")
-class NoteController(val service: NoteService) {
+class NoteController(
+    val service: NoteService,
+) {
     @GetMapping
-    fun getAllNotes(@AuthenticationPrincipal email: String): BaseResponse<List<NoteResponseDto>> {
-        return BaseResponse.Companion.success(service.getNotes(email).map { it -> it.toResponseDto() })
-    }
+    fun getAllNotes(
+        @AuthenticationPrincipal email: String,
+    ): BaseResponse<List<NoteResponseDto>> = BaseResponse.Companion.success(service.getNotes(email).map { it.toResponseDto() })
 
     @GetMapping("/{id}")
-    fun getNote(@PathVariable id: Long, @AuthenticationPrincipal email: String): BaseResponse<NoteResponseDto> {
+    fun getNote(
+        @PathVariable id: Long,
+        @AuthenticationPrincipal email: String,
+    ): BaseResponse<NoteResponseDto> {
         val note = service.getNote(id, email)
         return BaseResponse.success(note.toResponseDto())
     }
@@ -27,7 +32,7 @@ class NoteController(val service: NoteService) {
     @PostMapping
     fun addNote(
         @Valid @RequestBody payload: CreateNoteDto,
-        @AuthenticationPrincipal email: String
+        @AuthenticationPrincipal email: String,
     ): BaseResponse<Nothing> {
         service.addNote(payload.title, payload.content, email = email)
         return BaseResponse.success(data = null, status = 201)
@@ -37,14 +42,17 @@ class NoteController(val service: NoteService) {
     fun updateNote(
         @PathVariable id: Long,
         @RequestBody payload: UpdateNoteDto,
-        @AuthenticationPrincipal email: String
+        @AuthenticationPrincipal email: String,
     ): BaseResponse<Nothing> {
         service.updateNote(id, payload.title, payload.content, email)
         return BaseResponse.success(data = null)
     }
 
     @DeleteMapping("/{id}")
-    fun deleteNote(@PathVariable id: Long, @AuthenticationPrincipal email: String): BaseResponse<Nothing> {
+    fun deleteNote(
+        @PathVariable id: Long,
+        @AuthenticationPrincipal email: String,
+    ): BaseResponse<Nothing> {
         service.deleteNote(id, email)
         return BaseResponse.success(data = null)
     }

@@ -12,11 +12,12 @@ data class UserResponseDto(
     val role: Role,
 )
 
-fun UserEntity.toResponseDto() = UserResponseDto(
-    id = id!!,
-    firstName = firstName,
-    lastName = lastName,
-    isActive = isActive,
-    email = email,
-    role = role,
-)
+fun UserEntity.toResponseDto() =
+    UserResponseDto(
+        id = id!!,
+        firstName = firstName,
+        lastName = lastName,
+        isActive = isActive,
+        email = email,
+        role = role,
+    )

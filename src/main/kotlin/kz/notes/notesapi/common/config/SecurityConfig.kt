@@ -19,31 +19,32 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
-    private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint
+    private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
 ) {
-
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        return http
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain =
+        http
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
-                it.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                    .requestMatchers("/auth/**", "/error").permitAll()
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                it
+                    .dispatcherTypeMatchers(DispatcherType.ERROR)
+                    .permitAll()
+                    .requestMatchers("/auth/**", "/error")
+                    .permitAll()
+                    .requestMatchers("/admin/**")
+                    .hasRole("ADMIN")
                     .requestMatchers(
                         "/docs/**",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
-                        "/swagger-ui.html"
+                        "/swagger-ui.html",
                     ).permitAll()
-                    .anyRequest().authenticated()
-            }
-
-            .exceptionHandling { it.authenticationEntryPoint(jwtAuthenticationEntryPoint) }
+                    .anyRequest()
+                    .authenticated()
+            }.exceptionHandling { it.authenticationEntryPoint(jwtAuthenticationEntryPoint) }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
-    }
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()

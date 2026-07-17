@@ -10,13 +10,17 @@ import java.util.*
 
 @Component
 class JwtTokenService(
-    private val properties: JwtConfigProperties
+    private val properties: JwtConfigProperties,
 ) {
     private val signKey = Keys.hmacShaKeyFor(properties.secret.toByteArray())
 
-    fun generateToken(email: String, role: Role): String {
+    fun generateToken(
+        email: String,
+        role: Role,
+    ): String {
         val now = Instant.now()
-        return Jwts.builder()
+        return Jwts
+            .builder()
             .subject(email)
             .claim(ROLE_CLAIM, role.name)
             .issuedAt(Date.from(now))
@@ -25,22 +29,24 @@ class JwtTokenService(
             .compact()
     }
 
-    fun extractEmail(token: String): String {
-        return Jwts.parser()
+    fun extractEmail(token: String): String =
+        Jwts
+            .parser()
             .verifyWith(signKey)
             .build()
             .parseSignedClaims(token)
             .payload
             .subject
-    }
 
     fun extractRole(token: String): Role {
-        val role = Jwts.parser()
-            .verifyWith(signKey)
-            .build()
-            .parseSignedClaims(token)
-            .payload
-            .get(ROLE_CLAIM, String::class.java)
+        val role =
+            Jwts
+                .parser()
+                .verifyWith(signKey)
+                .build()
+                .parseSignedClaims(token)
+                .payload
+                .get(ROLE_CLAIM, String::class.java)
 
         return Role.valueOf(role)
     }
@@ -49,19 +55,20 @@ class JwtTokenService(
         if (token.isNullOrBlank()) {
             return false
         }
-
         try {
-            val claims = Jwts.parser()
-                .verifyWith(signKey)
-                .build()
-                .parseSignedClaims(token)
-                .payload
+            val claims =
+                Jwts
+                    .parser()
+                    .verifyWith(signKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .payload
             val role = claims.get(ROLE_CLAIM, String::class.java)
 
             return !claims.subject.isNullOrBlank() && Role.entries.any { it.name == role }
-        } catch (e: JwtException) {
+        } catch (_: JwtException) {
             return false // Токен недействителен
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             return false
         }
     }

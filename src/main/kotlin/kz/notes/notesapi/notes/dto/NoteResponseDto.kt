@@ -11,10 +11,11 @@ data class NoteResponseDto(
     val updatedAt: Instant,
 )
 
-fun NoteEntity.toResponseDto() = NoteResponseDto(
-    id = id!!,
-    title = title,
-    content = content,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-)
+fun NoteEntity.toResponseDto() =
+    NoteResponseDto(
+        id = id!!,
+        title = title,
+        content = content,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+    )

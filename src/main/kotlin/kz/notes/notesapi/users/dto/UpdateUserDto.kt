@@ -6,5 +6,5 @@ data class UpdateUserDto(
     @field:NotBlank
     val firstName: String,
     @field:NotBlank
-    val lastName: String
+    val lastName: String,
 )

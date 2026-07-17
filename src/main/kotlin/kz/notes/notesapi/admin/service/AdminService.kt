@@ -1,7 +1,7 @@
 package kz.notes.notesapi.admin.service
 
 import kz.notes.notesapi.notes.domain.NoteEntity
-import kz.notes.notesapi.notes.exceptions.NoteNotFoundException
+import kz.notes.notesapi.notes.domain.exceptions.NoteNotFoundException
 import kz.notes.notesapi.notes.repository.NoteRepository
 import kz.notes.notesapi.users.domain.Role
 import kz.notes.notesapi.users.domain.UserEntity
@@ -13,13 +13,14 @@ import org.springframework.stereotype.Service
 
 @Service
 class AdminService(
-
     private val repository: UserRepository,
-    private val notesRepository: NoteRepository
+    private val notesRepository: NoteRepository,
 ) {
-    //Users
+    // Users
     fun getAllUsers(pageable: Pageable): Page<UserEntity> = repository.findAll(pageable)
+
     fun getUser(id: Long): UserEntity = getExistedUserOrThrow(id)
+
     fun activateUser(id: Long) {
         val user = getExistedUserOrThrow(id)
         if (user.isActive) return
@@ -34,15 +35,19 @@ class AdminService(
         repository.save(user)
     }
 
-    fun changeRole(id: Long, role: Role) {
+    fun changeRole(
+        id: Long,
+        role: Role,
+    ) {
         val user = getExistedUserOrThrow(id)
         if (user.role == role) return
         user.role = role
         repository.save(user)
     }
 
-    //Notes
+    // Notes
     fun getAllNotes(pageable: Pageable): Page<NoteEntity> = notesRepository.findAll(pageable)
+
     fun getNote(id: Long): NoteEntity {
         val existed = notesRepository.findById(id)
         if (existed.isEmpty) throw NoteNotFoundException()
@@ -54,5 +59,4 @@ class AdminService(
         if (existed.isEmpty) throw UserNotFoundException()
         return existed.get()
     }
-
 }

@@ -1,6 +1,10 @@
 package kz.notes.notesapi.common
 
-data class BaseResponse<T>(val status: Int, val data: T? = null, val error: String? = null) {
+data class BaseResponse<T>(
+    val status: Int,
+    val data: T? = null,
+    val error: String? = null,
+) {
     companion object {
         fun <T> success(
             data: T?,

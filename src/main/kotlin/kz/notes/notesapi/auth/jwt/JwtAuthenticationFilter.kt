@@ -15,19 +15,17 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 class JwtAuthenticationFilter(
     private val jwtTokenService: JwtTokenService,
-    private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint
+    private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
 ) : OncePerRequestFilter() {
-
-    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
-        return request.dispatcherType == DispatcherType.ERROR ||
-                request.servletPath.startsWith(AUTH_PATH_PREFIX) ||
-                request.servletPath == ERROR_PATH
-    }
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean =
+        request.dispatcherType == DispatcherType.ERROR ||
+            request.servletPath.startsWith(AUTH_PATH_PREFIX) ||
+            request.servletPath == ERROR_PATH
 
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         val token = request.getBearerToken()
 
@@ -38,7 +36,7 @@ class JwtAuthenticationFilter(
                 jwtAuthenticationEntryPoint.commence(
                     request,
                     response,
-                    UnauthorizedException("Недействительный или истекший токен")
+                    UnauthorizedException("Недействительный или истекший токен"),
                 )
                 return
             }
@@ -47,7 +45,10 @@ class JwtAuthenticationFilter(
         filterChain.doFilter(request, response)
     }
 
-    private fun authenticateToken(token: String, request: HttpServletRequest): Boolean {
+    private fun authenticateToken(
+        token: String,
+        request: HttpServletRequest,
+    ): Boolean {
         if (!jwtTokenService.validateToken(token)) {
             return false
         }

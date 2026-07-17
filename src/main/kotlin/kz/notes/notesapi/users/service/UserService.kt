@@ -10,14 +10,15 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class UserService(
     private val repo: UserRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) {
+    fun getUserInfo(email: String): UserEntity = findUserOrThrow(email)
 
-    fun getUserInfo(email: String): UserEntity {
-        return findUserOrThrow(email)
-    }
-
-    fun updateUser(email: String, firstName: String, lastName: String) {
+    fun updateUser(
+        email: String,
+        firstName: String,
+        lastName: String,
+    ) {
         val user = findUserOrThrow(email)
         user.firstName = firstName
         user.lastName = lastName

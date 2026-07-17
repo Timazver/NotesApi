@@ -20,7 +20,6 @@ import java.time.Instant
 
 @ExtendWith(MockitoExtension::class)
 class UserServiceTest {
-
     @Mock
     private lateinit var userRepository: UserRepository
 
@@ -35,20 +34,22 @@ class UserServiceTest {
 
     @BeforeEach
     fun setUp() {
-        testUser = UserEntity(
-            id = 1L,
-            firstName = "John",
-            lastName = "Doe",
-            isActive = true,
-            email = "john@example.com",
-            role = Role.USER,
-        )
-        testAuthCredentials = AuthCredentialsEntity(
-            id = 1L,
-            user = testUser,
-            passHash = "hashed_password",
-            createdAt = Instant.now(),
-        )
+        testUser =
+            UserEntity(
+                id = 1L,
+                firstName = "John",
+                lastName = "Doe",
+                isActive = true,
+                email = "john@example.com",
+                role = Role.USER,
+            )
+        testAuthCredentials =
+            AuthCredentialsEntity(
+                id = 1L,
+                user = testUser,
+                passHash = "hashed_password",
+                createdAt = Instant.now(),
+            )
     }
 
     @Test

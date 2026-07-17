@@ -8,6 +8,9 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      JWT_SECRET: '83690f2ee502af46be6fe005566e7350'
+      JWT_EXPIRATION: 300
     steps:
       - uses: actions/checkout@v6
       - name: Set up JDK 21 for x64

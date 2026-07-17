@@ -3,10 +3,10 @@ package kz.notes.notesapi.auth.jwt
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import java.time.Instant
+import java.util.Date
 import kz.notes.notesapi.users.domain.Role
 import org.springframework.stereotype.Component
-import java.time.Instant
-import java.util.*
 
 @Component
 class JwtTokenService(

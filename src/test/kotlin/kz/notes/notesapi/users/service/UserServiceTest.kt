@@ -1,10 +1,11 @@
 package kz.notes.notesapi.users.service
 
 import kz.notes.notesapi.auth.domain.AuthCredentialsEntity
-import kz.notes.notesapi.infrastructure.AuthRepository
-import kz.notes.notesapi.infrastructure.UserRepository
+import kz.notes.notesapi.auth.repository.AuthRepository
+import kz.notes.notesapi.users.domain.Role
 import kz.notes.notesapi.users.domain.UserEntity
 import kz.notes.notesapi.users.domain.exceptions.UserNotFoundException
+import kz.notes.notesapi.users.repository.UserRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
@@ -19,6 +20,7 @@ import java.time.Instant
 
 @ExtendWith(MockitoExtension::class)
 class UserServiceTest {
+
     @Mock
     private lateinit var userRepository: UserRepository
 
@@ -33,55 +35,52 @@ class UserServiceTest {
 
     @BeforeEach
     fun setUp() {
-        testUser = UserEntity(id = 1L, firstName = "John", lastName = "Doe", isActive = true)
-        testAuthCredentials =
-            AuthCredentialsEntity(
-                id = 1L,
-                email = "john.doe@example.com",
-                user = testUser,
-                passHash = "hashed_password",
-                createdAt = Instant.now(),
-            )
+        testUser = UserEntity(
+            id = 1L,
+            firstName = "John",
+            lastName = "Doe",
+            isActive = true,
+            email = "john@example.com",
+            role = Role.USER,
+        )
+        testAuthCredentials = AuthCredentialsEntity(
+            id = 1L,
+            user = testUser,
+            passHash = "hashed_password",
+            createdAt = Instant.now(),
+        )
     }
 
     @Test
     fun `getUserInfo should return user when email exists`() {
-        // Arrange
-        val email = "john.doe@example.com"
-        `when`(authRepository.findByEmail(email)).thenReturn(testAuthCredentials)
+        val email = "john@example.com"
+        `when`(userRepository.findByEmail(email)).thenReturn(testUser)
 
-        // Act
         val result = userService.getUserInfo(email)
 
-        // Assert
         assertEquals("John", result.firstName)
         assertEquals("Doe", result.lastName)
-        verify(authRepository).findByEmail(email)
+        verify(userRepository).findByEmail(email)
     }
 
     @Test
     fun `getUserInfo should throw UserNotFoundException when email does not exist`() {
-        // Arrange
         val email = "nonexistent@example.com"
-        `when`(authRepository.findByEmail(email)).thenReturn(null)
+        `when`(userRepository.findByEmail(email)).thenReturn(null)
 
-        // Act & Assert
         assertThrows(UserNotFoundException::class.java) {
             userService.getUserInfo(email)
         }
-        verify(authRepository).findByEmail(email)
+        verify(userRepository).findByEmail(email)
     }
 
     @Test
     fun `updateUser should update and save user when email exists`() {
-        // Arrange
-        val email = "john.doe@example.com"
-        `when`(authRepository.findByEmail(email)).thenReturn(testAuthCredentials)
+        val email = "john@example.com"
+        `when`(userRepository.findByEmail(email)).thenReturn(testUser)
 
-        // Act
         userService.updateUser(email, "Jane", "Smith")
 
-        // Assert
         assertEquals("Jane", testUser.firstName)
         assertEquals("Smith", testUser.lastName)
         verify(userRepository).save(testUser)

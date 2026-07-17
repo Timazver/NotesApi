@@ -1,5 +1,6 @@
 services:
   notes-api:
+    container_name: notes-api
     build:
       context: .
       dockerfile: ./Dockerfile
